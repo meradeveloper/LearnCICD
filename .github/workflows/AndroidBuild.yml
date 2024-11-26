@@ -1,0 +1,39 @@
+name: Android Build
+
+on:
+  pull_request:
+    branches:
+      - "main"
+  push:
+    branches:
+      - "main"
+
+jobs:
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: checkout
+        uses: actions/checkout@v4
+
+      # Setup java sdk
+      - name: Setup Java SDK
+        uses: actions/setup-java@v4.5.0
+
+      # Gradle Setup
+      - name: Gradle Setup
+        uses: gradle/actions/setup-gradle@v4
+
+      # Build Android Gradle
+      - name: run gradle
+        run : ./gradlew build
+
+      # Upload Build Artifact
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: AndroidCICD.apk
+          path: app/build/output/debug/app-debug.apk
